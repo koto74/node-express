@@ -5,6 +5,7 @@ const express = require("express");
 const app = express();
 app.use(express.urlencoded({ extended: true}));
 const activities = require("./activities.json");
+const port = process.env.PORT ||| 5000;
 
 app.get("/", function(req, res) {
 	res.sendFile(__dirname + "/index.html");
@@ -16,12 +17,17 @@ app.post("/autumn", function(req, res){
 	});
 });
 
-app.get("/update", function(req, res) {
-	console.log(activities[0].activity);
+app.post("/update", function(req, res) {
+	activities[0].activity = req.body.updatedActivity;
 	res.send(activities);
 });
 
-app.listen(5000, function() {
-	console.log("Listening on localhost post 5000");
+app.post("/delete", function(req, res) {
+	activities.splice(req.body.number, 1);
+	res.send(activities);
+});
+
+app.listen(port, function() {
+	console.log('Listening on ${port}');
 });
 
